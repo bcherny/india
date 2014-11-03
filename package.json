@@ -1,0 +1,34 @@
+{
+  "name": "india",
+  "version": "0.0.0",
+  "description": "INterface Differ and Inspector Assistant",
+  "bin": "index.js",
+  "main": "india.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bcherny/india.git"
+  },
+  "keywords": [
+    "interface",
+    "jsdoc",
+    "diff",
+    "check",
+    "compliant",
+    "compliance",
+    "version"
+  ],
+  "author": "Boris Cherny <bcherny@turn.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bcherny/india/issues"
+  },
+  "homepage": "https://github.com/bcherny/india",
+  "dependencies": {
+    "jsdoc-parse": "^0.2.10",
+    "lodash": "^2.4.1",
+    "q": "^1.0.1"
+  }
+}
