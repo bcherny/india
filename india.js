@@ -45,4 +45,11 @@ function getInterface (fileName) {
 
 }
 
+function diffInterface (/* interface... */) {
+
+  return _.difference.apply(_, interface)
+
+}
+
+module.eports.diffInterface = diffInterface
 module.exports.getInterface = getInterface
