@@ -2,7 +2,8 @@
 
 module.exports = {
   foo: foo,
-  bar: bar
+  bar: bar,
+  baz: baz
 }
 
 
@@ -10,7 +11,7 @@ module.exports = {
  * Foo
  * @param {String} foo
  * @param {Number} bar
- * @return {Object} Some object
+ * @return {Array} Some array
  */
 function foo (foo, bar) {}
 
@@ -19,7 +20,14 @@ function foo (foo, bar) {}
  * Bar
  * @param  {Array} foo An array
  * @param  {String} bar A bar
- * @param  {Any} baz Any baz works
  * @return {Promise}
  */
-function bar (foo, bar, baz) {}
+function bar (foo, bar) {}
+
+
+/**
+ * Baz
+ * @param  {Array} foo An array
+ * @return {Promise}
+ */
+function baz (foo) {}
