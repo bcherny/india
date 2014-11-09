@@ -51,5 +51,5 @@ function diffInterface (/* interface... */) {
 
 }
 
-module.eports.diffInterface = diffInterface
+module.exports.diffInterface = diffInterface
 module.exports.getInterface = getInterface
