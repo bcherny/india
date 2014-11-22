@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/bcherny/india",
   "dependencies": {
+    "chalk": "^0.5.1",
     "doctrine": "^0.6.2",
     "jsdoc-parse": "^0.2.10",
     "lodash": "^2.4.1",

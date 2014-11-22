@@ -1,12 +1,15 @@
 
 
 const _ = require('lodash')
+const chalk = require('chalk')
 const fs = require('fs')
 const parse = require('jsdoc-parse')
 const q = require('q')
 const vm = require('vm')
 const streamifier = require('streamifier')
 
+// validation rules
+const rules = require('./rules')
 
 function getJsDocFromFileName (fileName) {
 
@@ -96,63 +99,93 @@ function getInterfaceFromContent (content) {
 
 // }
 
-function diffInterface (interface1, interface2, hash1, hash2) {
+function diffInterface (interface1, interface2, hash1, hash2, fileContentsAtHash1, fileContentsAtHash2, filename) {
 
-  interface1.forEach(function (method) {
+  rules.forEach(function (rule) {
 
-    const method2 = _.find(interface2, { name: method.name })
+    try {
 
-    // was the method removed?
-    if (!method2) {
-      console.warn('DESTRUCTIVE CHANGE:', hash1, 'contains method', method.name + ', but', hash2, 'does not')
-    }
+      rule.fn(interface1, interface2, {
+        hash1: hash1,
+        hash2: hash2,
+        contents1: fileContentsAtHash1,
+        contents2: fileContentsAtHash2,
+        filename: filename
+      })
 
-    // did the method's arity decrease?
-    if (method.params.length > method2.params.length) {
-      console.warn('DESTRUCTIVE CHANGE: method', method.name, 'has arity', method.params.length, 'at', hash1 + ', but has decreased to', method2.params.length, 'at', hash2)
-    }
+      console.info(chalk.green('✔ ' + rule.name))
 
-    // did the method's arity increase?
-    if (method.params.length < method2.params.length) {
-      console.warn('ADDITIVE CHANGE: method', method.name, 'has arity', method.params.length, 'at', hash1 + ', and has increased to', method2.params.length, 'at', hash2)
-    }
+    } catch (e) {
 
-    method.params.forEach(function (param, n) {
+      if (e.name == 'AssertionError') {
 
-      const param2 = method2.params[n]
+        console.info(chalk.red('✘ ' + rule.name), '\n\t', e.message)
 
-      if (!param2) {
-        return
+      } else {
+
+        throw e
+
       }
 
-      // did a parameter's name change?
-      if (param.name !== param2.name) {
-        console.warn('DESTRUCTIVE CHANGE: parameter', param.name, 'exists in method', method.name, 'at', hash1 + ', but is changed to', param2.name, 'at', hash2)
-      }
-
-      // did a parameter's type change?
-      if (!param.type.names.every(function (type) {
-        return param2.type.names.indexOf(type) > -1
-      })) {
-        console.warn('DESTRUCTIVE CHANGE: parameter', param.name, 'is of type', param.type.names.join('|'), 'in method', method.name, 'at', hash1 + ', but has changed to', param2.type.names.join('|'), 'at', hash2)
-      }
-
-    })
+    }
 
   })
 
-  interface2.forEach(function (method) {
+  // interface1.forEach(function (method) {
 
-    const method1 = _.find(interface1, { name: method.name })
+  //   const method2 = _.find(interface2, { name: method.name })
 
-    // was a method added?
-    if (!method1) {
-      console.warn('ADDITIVE CHANGE:', hash1, 'contains method', method.name + ', but', hash2, 'does not')
-    }
+  //   // was the method removed?
+  //   if (!method2) {
+  //     console.warn('[DESTRUCTIVE CHANGE]', hash1, 'contains method', method.name + ', but', hash2, 'does not')
+  //   }
 
-    // did a method's arity increase?
+  //   // did the method's arity decrease?
+  //   if (method.params.length > method2.params.length) {
+  //     console.warn('[DESTRUCTIVE CHANGE] method', method.name, 'has arity', method.params.length, 'at', hash1 + ', but has decreased to', method2.params.length, 'at', hash2)
+  //   }
 
-  })
+  //   // did the method's arity increase?
+  //   if (method.params.length < method2.params.length) {
+  //     console.warn('[ADDITIVE CHANGE] method', method.name, 'has arity', method.params.length, 'at', hash1 + ', and has increased to', method2.params.length, 'at', hash2)
+  //   }
+
+  //   method.params.forEach(function (param, n) {
+
+  //     const param2 = method2.params[n]
+
+  //     if (!param2) {
+  //       return
+  //     }
+
+  //     // did a parameter's name change?
+  //     if (param.name !== param2.name) {
+  //       console.warn('[DESTRUCTIVE CHANGE] parameter', param.name, 'exists in method', method.name, 'at', hash1 + ', but is changed to', param2.name, 'at', hash2)
+  //     }
+
+  //     // did a parameter's type change?
+  //     if (!param.type.names.every(function (type) {
+  //       return param2.type.names.indexOf(type) > -1
+  //     })) {
+  //       console.warn('[DESTRUCTIVE CHANGE] parameter', param.name, 'is of type', param.type.names.join('|'), 'in method', method.name, 'at', hash1 + ', but has changed to', param2.type.names.join('|'), 'at', hash2)
+  //     }
+
+  //   })
+
+  // })
+
+  // interface2.forEach(function (method) {
+
+  //   const method1 = _.find(interface1, { name: method.name })
+
+  //   // was a method added?
+  //   if (!method1) {
+  //     console.warn('[ADDITIVE CHANGE]', hash1, 'contains method', method.name + ', but', hash2, 'does not')
+  //   }
+
+  //   // did a method's arity increase?
+
+  // })
 
 }
 
