@@ -41,13 +41,19 @@ q.all([hash1, hash2, filename])
     getFileContentsAtCommit(filename, hash2)
   ]).spread(function (fileContentsAtHash1, fileContentsAtHash2) {
 
-    console.log('got contents', fileContentsAtHash1, fileContentsAtHash2)
+    console.log('got contents')
 
-    // const interface1 = india.getInterface(fileContentsAtHash1)
-    // const interface2 = india.getInterface(fileContentsAtHash2)
+    return q.all([
+      india.getInterfaceFromContent(fileContentsAtHash1),
+      india.getInterfaceFromContent(fileContentsAtHash2)
+    ]).spread(function (interface1, interface2) {
 
+      console.info('got interfaces', interface1, interface2)
 
-    // console.log(india.diffInterface(interface1, interface2))
+      console.log('diff', india.diffInterface(interface1, interface2))
+
+    })
+    .done()
 
   })
   .done()
