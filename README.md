@@ -24,7 +24,7 @@ india hash1 -- file.js
 
 **example:**
 
-```bash
+```text
 $ india f66bf74 -- ./demo/demo.js
 
 ✔ A method can't be removed
