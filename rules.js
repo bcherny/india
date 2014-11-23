@@ -97,10 +97,20 @@ rules.add('A parameter\'s type can\'t become more restrictive', function (int1, 
 		method.params.forEach(function (param) {
 
 			const param2 = _.find(method2.params, { name: param.name })
+			const types1 = param.type.names
+			const types2 = param2.type.names
+
+			assert(types1.every(function (type) {
+				return types2.indexOf(type) > -1
+			}), 'Method "' + method.name + '"\'s parameter "' + param.name + '" is of type "' + types1.join('|') + '" at commit 1, but is "' + types2.join('|') + '" at commit 2')
 
 		})
 
 	})
+
+})
+
+rules.add('A method\'s return type can\'t change', function (int1, int2, meta) {
 
 })
 
