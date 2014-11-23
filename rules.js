@@ -1,6 +1,7 @@
 
 const _ = require('lodash')
 const assert = require('assert')
+const ordinal = require('ordinal').english
 
 var rules = {
 
@@ -49,10 +50,58 @@ rules.add('A method\'s arity can\'t decrease', function (int1, int2, meta) {
 
 })
 
+rules.add('A method\'s parameters can\'t be removed', function (int1, int2, meta) {
+
+	int1.forEach(function (method) {
+
+		const method2 = _.find(int2, { name: method.name })
+
+		method.params.forEach(function (param) {
+
+			assert(_.find(method2.params, { name: param.name }), 'Method "' + method.name + '" accepts a  parameter "' + param.name + '" at commit 1, but was removed at commit 2')
+
+		})
+
+	})
+
+})
+
+rules.add('A method\'s parameters can\'t be reordered', function (int1, int2, meta) {
+
+	int1.forEach(function (method) {
+
+		const method2 = _.find(int2, { name: method.name })
+
+		method.params.forEach(function (param, n) {
+
+			const param2 = _.find(method2.params, { name: param.name })
+			const n2 = method2.params.indexOf(param2)
+
+			// if the parameter doesn't exist at commit 2, we can't check order
+			if (n2 < 0) return
+
+			assert(param2 && n == n2, 'Method "' + method.name + '"\'s ' + ordinal(n) + ' parameter is "' + param.name + '" at commit 1, but is the ' + ordinal(n2) + ' parameter at commit 2')
+
+		})
+
+	})
+
+})
+
 rules.add('A parameter\'s type can\'t become more restrictive', function (int1, int2, meta) {
 
-	
-	
+	int1.forEach(function (method) {
+
+		const method2 = _.find(int2, { name: method.name })
+
+		method.params.forEach(function (param) {
+
+			const param2 = _.find(method2.params, { name: param.name })
+
+		})
+
+	})
+
 })
 
 // Minor
@@ -70,6 +119,10 @@ rules.add('A method\'s arity can\'t increase', function (int1, int2, meta) {
 	int2.forEach(function (method) {
 
 		const method1 = _.find(int1, { name: method.name })
+
+		// if the method doesn't exist at hash2 in the first place, we can't test this
+		if (!method1) return
+
 		const arity2 = method.params.length
 		const arity1 = method1.params.length
 
@@ -77,6 +130,12 @@ rules.add('A method\'s arity can\'t increase', function (int1, int2, meta) {
 
 	})
 
+})
+
+rules.add('A parameter\'s type can\'t become less restrictive', function (int1, int2, meta) {
+
+	
+	
 })
 
 module.exports = rules
