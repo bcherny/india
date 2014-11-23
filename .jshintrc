@@ -1,5 +1,7 @@
 {
 	"asi": true,
 	"esnext": true,
-	"laxcomma": true
+	"laxbreak": true,
+	"laxcomma": true,
+	"smarttabs": true
 }

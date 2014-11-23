@@ -94,15 +94,22 @@ rules.add('A parameter\'s type can\'t become more restrictive', function (int1, 
 
 		const method2 = _.find(int2, { name: method.name })
 
+		if (!method2) return
+
 		method.params.forEach(function (param) {
 
 			const param2 = _.find(method2.params, { name: param.name })
+
+			// if the parameter doesn't exist at commit 2, we can't check its type
+			if (!param2) return
+
 			const types1 = param.type.names
 			const types2 = param2.type.names
 
-			assert(types1.every(function (type) {
-				return types2.indexOf(type) > -1
-			}), 'Method "' + method.name + '"\'s parameter "' + param.name + '" is of type "' + types1.join('|') + '" at commit 1, but is "' + types2.join('|') + '" at commit 2')
+			assert(
+				types1.every(function (type) { return types2.indexOf(type) > -1 }
+			 || types2.indexOf('Any') > -1),
+				'Method "' + method.name + '"\'s parameter "' + param.name + '" is of type "' + types1.join('|') + '" at commit 1, but is "' + types2.join('|') + '" at commit 2')
 
 		})
 
@@ -111,6 +118,36 @@ rules.add('A parameter\'s type can\'t become more restrictive', function (int1, 
 })
 
 rules.add('A method\'s return type can\'t change', function (int1, int2, meta) {
+
+	int1.forEach(function (method) {
+
+		const method2 = _.find(int2, { name: method.name })
+
+		if (!method2) return
+
+		const returnType1 = method.returns[0].type.names[0]
+		const returnType2 = method2.returns[0].type.names[0]
+
+		assert(returnType1 == returnType2, 'Method "' + method.name + '" has a return type of "' + returnType1 + '" at commit 1, but the return type has changed to "' + returnType2 + '" at commit 2')
+
+	})
+
+})
+
+rules.add('A method\'s return type can\'t become less restrictive', function (int1, int2, meta) {
+
+	int1.forEach(function (method) {
+
+		const method2 = _.find(int2, { name: method.name })
+
+		if (!method2) return
+
+		const returnType1 = method.returns[0].type.names[0]
+		const returnType2 = method2.returns[0].type.names[0]
+
+		assert(!(returnType1 != 'Any' && returnType2 == 'Any'), 'Method "' + method.name + '" has a return type of "' + returnType1 + '" at commit 1, but the return type has changed to "' + returnType2 + '" at commit 2')
+
+	})
 
 })
 
@@ -144,8 +181,48 @@ rules.add('A method\'s arity can\'t increase', function (int1, int2, meta) {
 
 rules.add('A parameter\'s type can\'t become less restrictive', function (int1, int2, meta) {
 
-	
-	
+	int2.forEach(function (method) {
+
+		const method1 = _.find(int1, { name: method.name })
+
+		if (!method1) return
+
+		method.params.forEach(function (param) {
+
+			const param1 = _.find(method1.params, { name: param.name })
+
+			// if the parameter doesn't exist at commit 2, we can't check its type
+			if (!param1) return
+
+			const types2 = param.type.names
+			const types1 = param1.type.names
+
+			assert(
+				types2.every(function (type) { return types1.indexOf(type) > -1 }
+			 || types1.indexOf('Any') > -1),
+				'Method "' + method.name + '"\'s parameter "' + param.name + '" is of type "' + types1.join('|') + '" at commit 1, but is "' + types2.join('|') + '" at commit 2')
+
+		})
+
+	})
+
+})
+
+rules.add('A method\'s return type can\'t become more restrictive', function (int1, int2, meta) {
+
+	int1.forEach(function (method) {
+
+		const method2 = _.find(int2, { name: method.name })
+
+		if (!method2) return
+
+		const returnType1 = method.returns[0].type.names[0]
+		const returnType2 = method2.returns[0].type.names[0]
+
+		assert(!(returnType1 == 'Any' && returnType2 != 'Any'), 'Method "' + method.name + '" has a return type of "' + returnType1 + '" at commit 1, but the return type has changed to "' + returnType2 + '" at commit 2')
+
+	})
+
 })
 
 module.exports = rules
