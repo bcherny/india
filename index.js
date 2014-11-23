@@ -48,7 +48,7 @@ q.all([hash1, hash2, filename])
       india.getInterfaceFromContent(fileContentsAtHash2)
     ]).spread(function (interface1, interface2) {
 
-      console.info('got interfaces', require('util').inspect(interface1[0].params[0].type))
+      console.info('got interfaces')
 
       india.diffInterface(interface1, interface2, hash1, hash2, fileContentsAtHash1, fileContentsAtHash2, filename)
 
