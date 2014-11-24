@@ -2,8 +2,6 @@
 
 > INterface Diffing and Inspection Assistant
 
-**Status: UNSTABLE**
-
 diff a module's interface between 2 commits
 
 ## install
@@ -29,20 +27,23 @@ $ india f66bf74 -- ./demo/demo.js
 
 ✔ A method can't be removed
 ✘ A method's arity can't decrease 
-	 Method "bar" has arity of 3 at commit 1, but arity has decreased to 2 at commit 2
+	 Method "bar" has arity of 3 at f66bf74, but arity has decreased to 2 at HEAD
 ✘ A method's parameters can't be removed 
-	 Method "bar" accepts a  parameter "baz" at commit 1, but was removed at commit 2
+	 Method "bar" accepts a  parameter "baz" at f66bf74, but was removed at HEAD
 ✔ A method's parameters can't be reordered
 ✔ A parameter's type can't become more restrictive
 ✘ A method's return type can't change 
-	 Method "foo" has a return type of "Object" at commit 1, but the return type has changed to "Array" at commit 2
+	 Method "foo" has a return type of "Object" at f66bf74, but the return type has changed to "Array" at HEAD
 ✔ A method's return type can't become less restrictive
 ✘ A method can't be added 
-	 Commit 2 contains method "baz", which is not defined at commit 1
+	 HEAD contains method "baz", which is not defined at f66bf74
 ✔ A method's arity can't increase
 ✔ A parameter's type can't become less restrictive
 ✔ A method's return type can't become more restrictive
 
-Found 3 backwards-incompatible API changes. 
-Recommend major version bump (0.0.0 => 0.1.0).
+Found 3 backwards-incompatible API changes.
+Found 1 backwards-compatible API change.
+Recommend minor version bump (0.0.0 => 0.1.0).
 ```
+
+![](http://i.imgur.com/aO8bLvV.gif)
