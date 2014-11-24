@@ -1,6 +1,6 @@
 {
   "name": "india",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "INterface Diffing and Inspection Assistant",
   "bin": "index.js",
   "main": "india.js",
@@ -14,9 +14,12 @@
   },
   "keywords": [
     "interface",
+    "API",
     "jsdoc",
     "diff",
+    "difference",
     "check",
+    "test",
     "compliant",
     "compliance",
     "version"
@@ -29,7 +32,6 @@
   "homepage": "https://github.com/bcherny/india",
   "dependencies": {
     "chalk": "^0.5.1",
-    "doctrine": "^0.6.2",
     "handlebars": "^2.0.0",
     "jsdoc-parse": "^0.2.10",
     "lodash": "^2.4.1",
