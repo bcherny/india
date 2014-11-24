@@ -4,6 +4,7 @@ const _ = require('lodash')
 const exec = require('child_process').exec
 const fs = require('fs')
 const india = require('./india')
+const path = require('path')
 const q = require('q')
 const semver = require('semver')
 const argv = process.argv
@@ -50,7 +51,7 @@ q.all([hash1, hash2, filename])
 
       const breaks = india.diffInterface(interface1, interface2, hash1, hash2)
 
-      getVerisonFromPackageJson().then(function (version) {
+      getVersionFromPackageJson().then(function (version) {
         india.suggestVersion(version, breaks)
       })
 
@@ -64,11 +65,17 @@ q.all([hash1, hash2, filename])
 .done()
 
 
-function getVerisonFromPackageJson () {
+
+
+/**
+ * Returns the version string from the package.json in the current directory
+ * @return {String} Version string
+ */
+function getVersionFromPackageJson () {
 
   const deferred = q.defer()
 
-  fs.readFile('./package.json', function (err, data) {
+  fs.readFile(path.resolve(process.cwd() + '/package.json'), function (err, data) {
 
     if (err) {
       deferred.reject(err)
@@ -91,6 +98,12 @@ function getVerisonFromPackageJson () {
 }
 
 
+/**
+ * Get the contents of a file at a commit
+ * @param  {String} filename
+ * @param  {String} hash
+ * @return {Promise<String>}
+ */
 function getFileContentsAtCommit (filename, hash) {
 
   return cmd('git show ' + hash + ':' + filename)
@@ -98,6 +111,11 @@ function getFileContentsAtCommit (filename, hash) {
 }
 
 
+/**
+ * Executes a shell command
+ * @param  {String} command
+ * @return {Promise<String>}
+ */
 function cmd (command) {
 
   var deferred = q.defer()

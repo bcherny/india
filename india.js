@@ -43,6 +43,14 @@ function getInterface (content) {
 
 }
 
+/**
+ * Validates an interface at 2 points in history against the validation rules
+ * @param  {Array} interface1 Interface at the earlier point in history
+ * @param  {Array} interface2 Interface at the later point in history
+ * @param  {String} hash1     Interface's SHA1 hash at the earlier point in history
+ * @param  {String} hash2     Interface's SHA1 hash at the later point in history
+ * @return {Object}           Validation results
+ */
 function diffInterface (interface1, interface2, hash1, hash2) {
 
   const data = {
@@ -90,6 +98,12 @@ function diffInterface (interface1, interface2, hash1, hash2) {
 
 }
 
+/**
+ * Suggest a new version based on the current version and the validation results
+ * @param  {String} version Old version string
+ * @param  {Object} breaks  Validation results produced by 
+ * @return {String}         New version string
+ */
 function suggestVersion (version, breaks) {
 
   var newVersion
