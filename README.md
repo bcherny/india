@@ -45,3 +45,7 @@ Found 3 backwards-incompatible API changes.
 Found 1 backwards-compatible API change.
 Recommend minor version bump (0.0.0 => 0.1.0).
 ```
+
+## how does it work?
+
+INDIA looks at your file's exports, and parses the jsdoc for each exported method. It then diffs the jsdocs at the given git commits, and runs the resultant diff through its validation rules. Based on the result, INDIA suggests an appropriate next version for your file.
