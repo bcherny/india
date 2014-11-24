@@ -45,5 +45,3 @@ Found 3 backwards-incompatible API changes.
 Found 1 backwards-compatible API change.
 Recommend minor version bump (0.0.0 => 0.1.0).
 ```
-
-![](http://i.imgur.com/aO8bLvV.gif)
