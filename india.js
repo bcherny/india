@@ -3,6 +3,7 @@
 const _ = require('lodash')
 const chalk = require('chalk')
 const fs = require('fs')
+const handlebars = require('handlebars')
 const parse = require('jsdoc-parse')
 const q = require('q')
 const vm = require('vm')
@@ -84,6 +85,14 @@ function getInterfaceFromContent (content) {
 
 function diffInterface (interface1, interface2, hash1, hash2, fileContentsAtHash1, fileContentsAtHash2, filename) {
 
+  const data = {
+    hash1: hash1,
+    hash2: hash2,
+    contents1: fileContentsAtHash1,
+    contents2: fileContentsAtHash2,
+    filename: filename
+  }
+
   var breaks = {
     major: 0,
     minor: 0
@@ -95,13 +104,7 @@ function diffInterface (interface1, interface2, hash1, hash2, fileContentsAtHash
 
     try {
 
-      rule.fn(interface1, interface2, {
-        hash1: hash1,
-        hash2: hash2,
-        contents1: fileContentsAtHash1,
-        contents2: fileContentsAtHash2,
-        filename: filename
-      })
+      rule.fn(interface1, interface2)
 
       console.info(chalk.green('✔ ' + rule.name))
 
@@ -109,7 +112,10 @@ function diffInterface (interface1, interface2, hash1, hash2, fileContentsAtHash
 
       if (e.name == 'AssertionError') {
 
-        console.info(chalk.red('✘ ' + rule.name), '\n\t', e.message)
+        console.info(
+          chalk.red('✘ ' + rule.name), '\n\t',
+          handlebars.compile(e.message)(data)
+        )
 
         breaks[rule.type]++
 

@@ -20,8 +20,8 @@ if (argv[2] !== '--' && argv[3] !== '--' && argv[4] !== '--') {
 
 // india :hash -- file.js
 if (argv[2] && argv[3] === '--' && argv[4]) {
-  hash1 = q.when(argv[2])
-  hash2 = getCurrentBranchName()
+  hash1 = argv[2]
+  hash2 = 'HEAD'
   filename = q.when(argv[4])
 }
 
@@ -97,21 +97,6 @@ function getFileContentsAtCommit (filename, hash) {
 
 }
 
-
-function getCurrentBranchName () {
-
-  return cmd('git branch | grep "*"')
-    .then(function (output) {
-
-      const branch = output
-        .split(' ')[1]
-        .split('\n')[0]
-
-      return branch
-    
-    })
-
-}
 
 function cmd (command) {
 

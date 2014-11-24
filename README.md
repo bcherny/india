@@ -18,7 +18,7 @@ npm install -g india
 # diff between 2 commits
 india hash1 hash2 -- file.js
 
-# diff between a commit and master
+# diff between a commit and HEAD
 india hash1 -- file.js
 ```
 
