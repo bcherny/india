@@ -8,6 +8,7 @@ const q = require('q')
 const pluralize = require('pluralize')
 const semver = require('semver')
 const streamifier = require('streamifier')
+const util = require('util')
 
 
 // validation rules
@@ -42,14 +43,11 @@ function getInterface (content) {
 
 }
 
-function diffInterface (interface1, interface2, hash1, hash2, fileContentsAtHash1, fileContentsAtHash2, filename) {
+function diffInterface (interface1, interface2, hash1, hash2) {
 
   const data = {
     hash1: hash1,
-    hash2: hash2,
-    contents1: fileContentsAtHash1,
-    contents2: fileContentsAtHash2,
-    filename: filename
+    hash2: hash2
   }
 
   var breaks = {
@@ -57,7 +55,7 @@ function diffInterface (interface1, interface2, hash1, hash2, fileContentsAtHash
     minor: 0
   }
 
-  console.log('\n')
+  util.puts('\n')
 
   rules.forEach(function (rule) {
 
@@ -65,15 +63,15 @@ function diffInterface (interface1, interface2, hash1, hash2, fileContentsAtHash
 
       rule.fn(interface1, interface2)
 
-      console.info(chalk.green('✔ ' + rule.name))
+      util.puts(chalk.green('✔ ' + rule.name))
 
     } catch (e) {
 
       if (e.name == 'AssertionError') {
 
-        console.info(
-          chalk.red('✘ ' + rule.name), '\n\t',
-          handlebars.compile(e.message)(data)
+        util.puts(
+          chalk.red('✘ ' + rule.name),
+          '  ' + handlebars.compile(e.message)(data)
         )
 
         breaks[rule.type]++
@@ -96,13 +94,13 @@ function suggestVersion (version, breaks) {
 
   var newVersion
 
-  console.log('\n')
+  util.puts('\n')
 
   if (semver.lt(version, '1.0.0') && (breaks.major || breaks.minor)) {
 
     newVersion = semver.inc(version, 'minor')
 
-    console.info(chalk.bold(
+    util.puts(chalk.bold(
       chalk.red('Found', breaks.major, 'backwards-incompatible API ' + pluralize('changes', breaks.major) + '.\n') +
       (breaks.minor ? chalk.blue('Found', breaks.minor, 'backwards-compatible API ' + pluralize('changes', breaks.minor) + '.') + '\n' : '') +
       'Recommend minor version bump',
@@ -113,7 +111,7 @@ function suggestVersion (version, breaks) {
 
     newVersion = semver.inc(version, 'major')
 
-    console.info(chalk.bold(
+    util.puts(chalk.bold(
       chalk.red('Found', breaks.major, 'backwards-incompatible API ' + pluralize('changes', breaks.major) + '.\n') +
       (breaks.minor ? chalk.blue('Found', breaks.minor, 'backwards-compatible API ' + pluralize('changes', breaks.minor) + '.') + '\n' : '') +
       'Recommend major version bump',
@@ -124,7 +122,7 @@ function suggestVersion (version, breaks) {
 
     newVersion = semver.inc(version, 'minor')
 
-    console.info(chalk.bold(
+    util.puts(chalk.bold(
       chalk.blue('Found', breaks.minor, 'backwards-compatible API ' + pluralize('changes', breaks.minor) + '.\n') +
       'Recommend minor version bump',
       '(' + version + ' => ' + newVersion + ').'
@@ -134,7 +132,7 @@ function suggestVersion (version, breaks) {
 
     newVersion = semver.inc(version, 'patch')
 
-    console.info(chalk.bold(
+    util.puts(chalk.bold(
       chalk.green('No API changes detected.\n') +
       'Recommend patch version bump',
       '(' + version + ' => ' + newVersion + ').'
@@ -142,7 +140,7 @@ function suggestVersion (version, breaks) {
 
   }
 
-  console.log('\n')
+  util.puts('\n')
 
   return newVersion
 

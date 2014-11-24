@@ -48,7 +48,7 @@ q.all([hash1, hash2, filename])
       india.getInterface(fileContentsAtHash2)
     ]).spread(function (interface1, interface2) {
 
-      const breaks = india.diffInterface(interface1, interface2, hash1, hash2, fileContentsAtHash1, fileContentsAtHash2, filename)
+      const breaks = india.diffInterface(interface1, interface2, hash1, hash2)
 
       getVerisonFromPackageJson().then(function (version) {
         india.suggestVersion(version, breaks)
