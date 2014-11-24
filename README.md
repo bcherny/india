@@ -42,4 +42,7 @@ $ india f66bf74 -- ./demo/demo.js
 ✔ A method's arity can't increase
 ✔ A parameter's type can't become less restrictive
 ✔ A method's return type can't become more restrictive
+
+Found 3 backwards-incompatible API changes. 
+Recommend major version bump (0.0.0 => 0.1.0).
 ```

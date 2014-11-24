@@ -2,8 +2,10 @@
 
 const _ = require('lodash')
 const exec = require('child_process').exec
+const fs = require('fs')
 const india = require('./india')
 const q = require('q')
+const semver = require('semver')
 const argv = process.argv
 
 var hash1, hash2, filename
@@ -41,16 +43,16 @@ q.all([hash1, hash2, filename])
     getFileContentsAtCommit(filename, hash2)
   ]).spread(function (fileContentsAtHash1, fileContentsAtHash2) {
 
-    console.log('got contents')
-
     return q.all([
       india.getInterfaceFromContent(fileContentsAtHash1),
       india.getInterfaceFromContent(fileContentsAtHash2)
     ]).spread(function (interface1, interface2) {
 
-      console.info('got interfaces')
+      const breaks = india.diffInterface(interface1, interface2, hash1, hash2, fileContentsAtHash1, fileContentsAtHash2, filename)
 
-      india.diffInterface(interface1, interface2, hash1, hash2, fileContentsAtHash1, fileContentsAtHash2, filename)
+      getVerisonFromPackageJson().then(function (version) {
+        india.suggestVersion(version, breaks)
+      })
 
     })
     .done()
@@ -62,6 +64,31 @@ q.all([hash1, hash2, filename])
 .done()
 
 
+function getVerisonFromPackageJson () {
+
+  const deferred = q.defer()
+
+  fs.readFile('./package.json', function (err, data) {
+
+    if (err) {
+      deferred.reject(err)
+    }
+
+    try {
+      deferred.resolve(
+        semver.clean(
+          JSON.parse(data).version
+        )
+      )
+    } catch (e) {
+      deferred.reject(e)
+    }
+
+  })
+
+  return deferred.promise
+
+}
 
 
 function getFileContentsAtCommit (filename, hash) {
@@ -80,8 +107,6 @@ function getCurrentBranchName () {
         .split(' ')[1]
         .split('\n')[0]
 
-      console.info('current branch is:', branch)
-
       return branch
     
     })
@@ -89,8 +114,6 @@ function getCurrentBranchName () {
 }
 
 function cmd (command) {
-
-  console.info('[cmd]', command)
 
   var deferred = q.defer()
 
