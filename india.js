@@ -2,57 +2,16 @@
 
 const _ = require('lodash')
 const chalk = require('chalk')
-const fs = require('fs')
 const handlebars = require('handlebars')
 const parse = require('jsdoc-parse')
 const q = require('q')
-const vm = require('vm')
 const pluralize = require('pluralize')
 const semver = require('semver')
 const streamifier = require('streamifier')
 
+
 // validation rules
 const rules = require('./rules')
-
-function getJsDocFromFileName (fileName) {
-
-  var stream = parse(fileName)
-    , deferred = q.defer()
-    , jsdoc = ''
-
-  stream.on('data', function (data) {
-    jsdoc += data
-  })
-
-  stream.on('end', function () {
-    deferred.resolve(JSON.parse(jsdoc))
-  })
-
-  stream.on('error', deferred.reject)
-
-  return deferred.promise
-
-}
-
-function getJsDocFromFileStream (fileName) {
-
-  var stream = parse(fileName)
-    , deferred = q.defer()
-    , jsdoc = ''
-
-  stream.on('data', function (data) {
-    jsdoc += data
-  })
-
-  stream.on('end', function () {
-    deferred.resolve(JSON.parse(jsdoc))
-  })
-
-  stream.on('error', deferred.reject)
-
-  return deferred.promise
-
-}
 
 
 /**
@@ -60,7 +19,7 @@ function getJsDocFromFileStream (fileName) {
  * @param  {String} content Stringified JavaScript code (eg. "var foo = 1;")
  * @return {Promise}
  */
-function getInterfaceFromContent (content) {
+function getInterface (content) {
 
   var jsdoc = ''
   var deferred = q.defer()
@@ -191,6 +150,6 @@ function suggestVersion (version, breaks) {
 
 _.extend(module.exports, {
   diffInterface: diffInterface,
-  getInterfaceFromContent: getInterfaceFromContent,
+  getInterface: getInterface,
   suggestVersion: suggestVersion
 })

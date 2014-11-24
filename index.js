@@ -44,8 +44,8 @@ q.all([hash1, hash2, filename])
   ]).spread(function (fileContentsAtHash1, fileContentsAtHash2) {
 
     return q.all([
-      india.getInterfaceFromContent(fileContentsAtHash1),
-      india.getInterfaceFromContent(fileContentsAtHash2)
+      india.getInterface(fileContentsAtHash1),
+      india.getInterface(fileContentsAtHash2)
     ]).spread(function (interface1, interface2) {
 
       const breaks = india.diffInterface(interface1, interface2, hash1, hash2, fileContentsAtHash1, fileContentsAtHash2, filename)
