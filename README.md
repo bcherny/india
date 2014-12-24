@@ -1,5 +1,9 @@
 # india
 
+[![][build]](https://travis-ci.org/bcherny/india)
+
+[build]: https://img.shields.io/travis/bcherny/india.svg?branch=master&style=flat-square
+
 > INterface Diffing and Inspection Assistant
 
 diff a module's interface between 2 commits

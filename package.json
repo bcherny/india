@@ -5,7 +5,8 @@
   "bin": "index.js",
   "main": "india.js",
   "scripts": {
-    "test": "nodeunit ./test/*"
+    "test": "nodeunit ./test/*",
+    "pretest": "npm install"
   },
   "preferGlobal": true,
   "repository": {
