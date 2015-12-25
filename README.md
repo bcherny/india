@@ -8,6 +8,16 @@
 
 diff a module's interface between 2 commits
 
+## use case
+
+[semver](http://semver.org/spec/v2.0.0.html) is pretty cool. in theory, it should lead to stable software that gets the latest updates as soon as they are available.
+
+in practice, **many packages don't follow semver** ([angular <2](http://angularjs.blogspot.com/2013/12/angularjs-13-new-release-approaches.html), [coffeescript](https://github.com/jashkenas/coffeescript/issues/3352), [nodejs <4](https://medium.com/@nodesource/node-js-is-semver-8b3938ae8d24#.httbe7ydu)).
+
+for the packages that do, **tagging a build with a new version is a manual process**, which makes it prone to human errors (ie. many types of false negatives and false positives).
+
+so let's try to automate the process. **run india as part of your build to automate new version tagging**.
+
 ## install
 
 ```bash

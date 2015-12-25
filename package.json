@@ -1,6 +1,6 @@
 {
   "name": "india",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "INterface Diffing and Inspection Assistant",
   "bin": "index.js",
   "main": "india.js",
